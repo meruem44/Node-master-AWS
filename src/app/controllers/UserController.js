@@ -1,16 +1,23 @@
 import 'dotenv/config';
 
+import aws from 'aws-sdk';
+
 import Mail from '../lib/Mail';
 
 class UserController {
-    async store(req,res) {
-        const { name, email, password, cellPhone } = req.body;
+    async store(req,res, next) {
+        const { name, email, password, cellPhone : PhoneNumber, message : Message } = req.body;
+
+        req.sendCell = {
+            Message,
+            PhoneNumber
+        };
 
         const user = {
             name,
             email,
             password,
-            cellPhone
+            cellPhone: PhoneNumber
         }
         //Enviar E-mail
        await Mail.sendMail({
@@ -19,9 +26,10 @@ class UserController {
             subject: 'Cadastro de usuário',
             html: `Olá, ${name}, bem-vindo aos estudos do leandro`
         });
-        //Enviar SMS
 
-        return res.json(user);
+        req.User = user;
+
+       next();
     }
 
 };
