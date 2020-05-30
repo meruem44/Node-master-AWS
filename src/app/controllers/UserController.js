@@ -1,8 +1,6 @@
 import 'dotenv/config';
 
-import aws from 'aws-sdk';
-
-import Mail from '../lib/Mail';
+import { mailQueue } from '../lib/queue';
 
 class UserController {
     async store(req,res, next) {
@@ -19,13 +17,8 @@ class UserController {
             password,
             cellPhone: PhoneNumber
         }
-        //Enviar E-mail
-       await Mail.sendMail({
-            from: `Node-master <${process.env.FROM_MAIL}>`,
-            to: `${name} <${email}>`,
-            subject: 'Cadastro de usuário',
-            html: `Olá, ${name}, bem-vindo aos estudos do leandro`
-        });
+        //Adicionar job de enviar E-mail
+        await mailQueue.add({ user });
 
         req.User = user;
 

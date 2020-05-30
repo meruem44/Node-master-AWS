@@ -1,23 +1,13 @@
-import aws from 'aws-sdk';
+import { sendQueue } from '../lib/queue';
 
 class SendSMS {
     async send(req, res) {
-        console.log(req.sendCell);
+       const { sendCell } = req;
 
-        const sns = new aws.SNS({
-            accessKeyId: process.env.ID_ACCESS,
-            secretAccessKey: process.env.SECRET_KEY,
-            region: process.env.REGION_AWS
-        });
+     // Chamar job de sendSMS
+     await sendQueue.add({ sendCell });
 
-        await sns.publish(req.sendCell).promise()
-            .then(data => {
-                return res.json(req.User);
-            }).catch(err => {
-                return res.json({err: err});
-            });
-
-
+     res.json({ ok: true });
     };
 };
 
