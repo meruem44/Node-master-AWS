@@ -3,6 +3,8 @@ import 'dotenv/config';
 import express, { json } from 'express';
 import cors from 'cors';
 
+import routes from './routes';
+
 class App {
     constructor() {
         this.server = express();
@@ -17,7 +19,7 @@ class App {
     };
 
     routes() {
-        
+        this.server.use(routes);
     };
 }
 
