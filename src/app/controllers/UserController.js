@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { mailQueue } from '../lib/queue';
+import Queue from '../lib/queue';
 
 class UserController {
     async store(req,res, next) {
@@ -18,7 +18,7 @@ class UserController {
             cellPhone: PhoneNumber
         }
         //Adicionar job de enviar E-mail
-        await mailQueue.add({ user });
+        await Queue.add('RegistrationMail',{ user });
 
         req.User = user;
 

@@ -1,11 +1,11 @@
-import { sendQueue } from '../lib/queue';
+import Queue from '../lib/queue';
 
 class SendSMS {
     async send(req, res) {
        const { sendCell } = req;
 
      // Chamar job de sendSMS
-     await sendQueue.add({ sendCell });
+     await Queue.add('SendSMS',{ sendCell });
 
      res.json({ ok: true });
     };
